@@ -1,6 +1,8 @@
 package com.qbros.DateTime;
+
 import java.text.SimpleDateFormat;
-import java.time.ZoneId;
+import java.time.*;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -13,7 +15,7 @@ public class Test {
 
     public static void main(String[] args) {
 
-        //----------OLD API
+        //---------------------------------------------OLD API---------------------------------------------------------
         Date aDate = new Date(2015, 12, 25, 20, 40);
         //the year count starts with offset from 1900 so (2015 will be 1900+2015)
         //the month start form zero
@@ -35,16 +37,16 @@ public class Test {
         //---------SQL date vs UTIL date
         //In sql we view date and time as two separate things, so sql date will suppress all the time related methods
         java.sql.Date sqlDate = new java.sql.Date(aDate.getTime());
-        sqlDate.getHours();// will throw exception
+        //sqlDate.getHours();// will throw exception
         java.sql.Time sqlTime = new java.sql.Time(aDate.getTime());
-        sqlTime.getYear();// will throw exception
+        //sqlTime.getYear();// will throw exception
 
         //-------Conversion From (util.Date, sql.Date, sql.Time, util.Calendar) can be done via passing getTime() method
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(aDate);
 
 
-        //---------------------OLD vs New API---------------------------
+        //-------------------------------------OLD vs New API---------------------------------------------------
         /**
          * Poor API design (for example, months start with 1 and days start with 0)
          * Not thread safe
@@ -58,15 +60,63 @@ public class Test {
          */
 
 
-        //---------------------New API
+        //---------------------New API------------------------------------------------------------------------
         /**
          * Java 8 introduces a new date-time API under the package java.time.
          * Local − Simplified date-time API with no complexity of timezone handling.
          * Zoned − Specialized date-time API to deal with various timezones.
          */
 
+        // Get the current date and time
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        LocalDateTime customDateTime = LocalDateTime.of(2018, Month.DECEMBER, 25, 12, 30);
+        LocalDateTime alteredDateTime = currentDateTime.withDayOfMonth(10).withYear(2012);
+
+        //We can extract LocalDate or LocalTime form the DateTime obj
+        LocalDate date1 = currentDateTime.toLocalDate();
+        LocalTime time1 = currentDateTime.toLocalTime();
+
+        //LocalDate has date related methods
+        //date1.getDayOfMonth(),....
+
+        //LocalTime has time related methods
+        //time1.getHour(), ....
 
 
+        //for some Date and time aspects we have well defined objs
+        Month month = currentDateTime.getMonth();
+        int day = currentDateTime.getDayOfMonth();
+        int seconds = currentDateTime.getSecond();
+
+        //-----------Modifying Date & Time
+        /**
+         * Using numbers for modifying date and time is error prone, Java 8 defines enums for this (java.time.Temporal)
+         */
+
+        //add 1 week to the current date
+        LocalDate nextWeek = date1.plus(1, ChronoUnit.WEEKS);
+        //notice that each midification creates a new obj (becaues LocalDate, ... are immutable)
+        LocalDate nextMonth = date1.plus(1, ChronoUnit.MONTHS);
+
+        //notice for modifying Date, Time objs, we should use proper  ChronoUnit,
+        //LocalTime newTime = time1.plus(1,ChronoUnit.MONTHS);// will throw UnsupportedTemporalTypeException
+        LocalTime newTime = time1.plus(1,ChronoUnit.HOURS);
+
+        //----------Difference Between two
+        /**
+         * Two specialized classes are introduced to deal with the time differences.
+         * Period − It deals with date based amount of time.
+         * Duration − It deals with time based amount of time.
+         */
+
+        Period period = Period.between(nextWeek, date1);
+        System.out.println("Period: " + period);
+
+        Duration duration = Duration.between(time1, newTime);
+        System.out.println("Duration: " + duration);
+
+
+        //---------Zoned time API
 
         ZoneId.getAvailableZoneIds();
     }
