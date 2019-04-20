@@ -14,7 +14,7 @@ import java.util.stream.Stream;
  * Created by V.Ghasemi
  * on 4/15/2019.
  */
-public class Comperators {
+public class Comparators {
 
     public static void main(String[] args) {
 

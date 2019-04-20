@@ -1,4 +1,4 @@
-package com.qbros.StreamAPI;
+package com.qbros;
 
 import java.util.stream.IntStream;
 
