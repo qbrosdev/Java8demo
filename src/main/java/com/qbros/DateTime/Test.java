@@ -117,6 +117,7 @@ public class Test {
 
 
         //---------Zoned time API
+        //todo zoned time vs local time
 
         ZoneId.getAvailableZoneIds();
     }
