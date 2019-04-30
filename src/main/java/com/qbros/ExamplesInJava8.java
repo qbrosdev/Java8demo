@@ -12,6 +12,7 @@ public class ExamplesInJava8 {
 
     }
 
+
     public static void fizzbuzz(){
         //fizbuzz example
         IntStream.range(1, 100).mapToObj(i ->{
