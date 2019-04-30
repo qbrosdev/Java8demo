@@ -1,5 +1,6 @@
 package com.qbros.StreamAPI;
 
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.IntStream;
 
 /**
@@ -14,7 +15,29 @@ public class ParallelStreamTest {
      * https://stackoverflow.com/a/34866143/3593084
      * */
 
+    public static String getSmallestAndLargestParallelSafe(String s, int k) {
+        System.out.println("START");
+        /*
+        * to solve the problem we can use atomic variables
+        * https://www.baeldung.com/java-atomic-variables
+        * */
+        final AtomicReference<String> smallest = new AtomicReference<>("");
+        final AtomicReference<String> largest = new AtomicReference<>("");
+        IntStream.range(0, (s.length() - k)+1).forEach(startIndex -> {
+            String sub = s.substring(startIndex, startIndex + k);
+            if (sub.compareTo(smallest.get()) < 0 || smallest.get().isEmpty() ) {
+                smallest.set(sub);
+            }
+
+            if (sub.compareTo(largest.get()) > 0 || largest.get().isEmpty()) {
+                largest.set(sub);
+            }
+        });
+        return smallest.get() + "\n" + largest.get();
+    }
+
     public static String getSmallestAndLargest(String s, int k) {
+        //https://www.baeldung.com/java-threadlocal
         System.out.println("START");
         /*
          * with large data and parallel streams, stream my be proccessed in different threads, so different thread local vars will be created
@@ -37,7 +60,7 @@ public class ParallelStreamTest {
 
     public static void main(String[] args) {
 
-        System.out.println(getSmallestAndLargest("welcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawe" +
+        System.out.println(getSmallestAndLargestParallelSafe("welcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawe" +
                 "lcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometoja" +
                 "vawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawel" +
                 "cometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojavawelcometojava" +
