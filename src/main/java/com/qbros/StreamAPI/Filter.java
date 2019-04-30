@@ -15,7 +15,5 @@ public class Filter {
         //map function may change the type of stream
         Stream.of(1,2,3).map(i -> "Mapped value:"+ String.valueOf(i)).forEach(System.out::println);
         Stream.of(1,2,3).sorted().forEach(System.out::println);
-
-
     }
 }

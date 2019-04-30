@@ -1,5 +1,8 @@
 package com.qbros.StreamAPI;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.IntStream;
 
@@ -23,7 +26,7 @@ public class ParallelStreamTest {
         * */
         final AtomicReference<String> smallest = new AtomicReference<>("");
         final AtomicReference<String> largest = new AtomicReference<>("");
-        IntStream.range(0, (s.length() - k)+1).forEach(startIndex -> {
+        java.util.stream.IntStream.range(0, (s.length() - k)+1).forEach(startIndex -> {
             String sub = s.substring(startIndex, startIndex + k);
             if (sub.compareTo(smallest.get()) < 0 || smallest.get().isEmpty() ) {
                 smallest.set(sub);
